@@ -4,7 +4,9 @@ __pycache__/
 *$py.class
 
 #folders excluded from version control
-paper_catalog
+paper_catalog/
+parsed_results/
+output/
 
 # C extensions
 *.so
