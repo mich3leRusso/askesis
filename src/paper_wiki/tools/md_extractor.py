@@ -9,15 +9,20 @@ class MD_Extractor():
         current_content = []
         level_counters = {}
         current_number = ""
-
+        self.title=''
         for line in self.content.split('\n'):
             if line.startswith('#'):
+
                 # Save previous section
                 if current_title is not None:
-                    self.sections[current_number] = {
-                        "title": current_title,
-                        "content": '\n'.join(current_content).strip()
-                    }
+                    if self.title == '':
+                        self.title = current_title
+                    else:
+                        
+                        self.sections[current_number] = {
+                            "title": current_title,
+                            "content": '\n'.join(current_content).strip()
+                        }
 
                 # Start new section
                 level = len(line) - len(line.lstrip('#'))
@@ -44,4 +49,4 @@ class MD_Extractor():
                 "content": '\n'.join(current_content).strip()
             }
 
-        return self.sections
+        return self.sections , self.title

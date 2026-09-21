@@ -20,8 +20,9 @@ def main():
                 # start of division of the file 
                 markdown = result.markdown(image_renderer=lambda block: "")
                 md_extractor = MD_Extractor(markdown, filename)
-                sections = md_extractor.get_sections()
+                sections, title = md_extractor.get_sections()
                 print(f"Sections extracted from {filename}:")
+                print(f"Title: {title}")
                 for section_number, section in sections.items():
                     print(f"Section {section_number}: {section['title']}")
                     input("Press Enter to see the content of this section...")      
