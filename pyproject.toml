@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "chromadb>=1.5.9",
     "mineru>=4.0.4",
     "nougat>=0.3.3",
     "nougat-ocr>=0.1.17",
