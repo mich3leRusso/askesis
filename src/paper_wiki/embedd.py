@@ -1,47 +1,31 @@
 import chromadb
-import os 
 
-#create the client and teh collection
-def init_chroma(collection_name: str):
-    # Initialize the Chroma client
-    client = chromadb.Client()
-    
-    # Create a collection for storing embeddings
-    if collection_name not in client.list_collections():
-        client.create_collection(collection_name)
-    
-    return client.get_collection(collection_name)
+DB_PATH = "chroma_db"
 
 
-def add_embeddings(collection, embeddings, metadata):
-    # Add embeddings to the collection
-    try :
-        collection.add(embeddings=embeddings, metadatas=metadata)
-    except Exception as e:
-        print(f"Error adding embeddings: {e}")
+def init_chroma(collection_name: str = "papers"):
+    # persistent so embeddings survive across runs; chromadb auto-embeds
+    # documents with its bundled default model (no separate model needed)
+    client = chromadb.PersistentClient(path=DB_PATH)
+    return client.get_or_create_collection(collection_name)
 
 
-def create_embedding(text, model):
-    # Create an embedding for the given text using the specified model
-    try:
-        embedding = model.encode(text)
-        return embedding
-    except Exception as e:
-        print(f"Error creating embedding: {e}")
-        return None
+def embed_sections(collection, sections: dict, source_filename: str, paper_title: str):
+    """Embed every section dict from MD_Extractor.get_sections() into the collection."""
+    ids, documents, metadatas = [], [], []
+    for number, section in sections.items():
+        if not section["content"]:
+            continue
+        ids.append(f"{source_filename}::{number}")
+        documents.append(section["content"])
+        metadatas.append({
+            "source": source_filename,
+            "number": number,
+            "section_title": section["title"],
+            "paper_title": paper_title
+        })
 
-def add_embedding(collection, embedding, metadata):
-    # Add a single embedding to the collection
-    try:
-        collection.add(embeddings=[embedding], metadatas=[metadata])
-    except Exception as e:
-        print(f"Error adding embedding: {e}")
+    if documents:
+        collection.upsert(ids=ids, documents=documents, metadatas=metadatas)
+    return len(documents)
 
-def get_embeddings(collection, query_embedding, n_results=5):
-    # Retrieve the most similar embeddings from the collection
-    try:
-        results = collection.query(query_embeddings=query_embedding, n_results=n_results)
-        return results
-    except Exception as e:
-        print(f"Error retrieving embeddings: {e}")
-        return None

@@ -7,6 +7,8 @@ __pycache__/
 paper_catalog/
 parsed_results/
 output/
+chroma_db/
+graphify-out/
 
 # C extensions
 *.so
