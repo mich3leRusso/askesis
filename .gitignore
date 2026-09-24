@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+**/__pycache__/
 *.py[codz]
 *$py.class
 
@@ -7,7 +8,7 @@ __pycache__/
 paper_catalog/
 parsed_results/
 output/
-
+graphify-out/
 # C extensions
 *.so
 
